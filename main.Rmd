@@ -14,10 +14,22 @@ knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE,
                       fig.retina = 3)
 ```
-```{r packages}
+```{r packages and functions}
 library(tidyverse)
 library(bookdown)
 library(janitor)
+
+sum_sq <- function(df, measure, group) {
+  df %>% group_by({{ group }}) %>% 
+    summarise(ss = sum(({{measure}} - mean({{measure}}))^2))
+}
+
+data_summary <- function(df, measure, group)  {
+  df %>% 
+   group_by({{ group }}) %>% 
+   summarise(mean_index = mean({{ measure }}),
+            n = length({{ measure }}),  sd = sd({{ measure }}), se = sd/sqrt(n))
+  }
 ```
 ########################### **Data Import** ###########################
 chaff <- read.delim("~/Documents/Uni/Data Science/Chaff/raw_data/chaff.txt") %>%
@@ -27,8 +39,12 @@ View(chaff)
 ########################## **Data Tidying** ###########################
 chaff2 <- chaff %>% 
   pivot_longer(names_to = "sex", 
-               values_to = "weight",
+               values_to = "mass",
                cols = c(1,2))
+               
+########################## **Data Analysis** ###########################
+sum_sq(chaff2, mass, sex)
+chaffsummary <- data_summary(chaff2, mass, sex)
     
 ########################## **Introduction** ###########################
 
@@ -37,3 +53,15 @@ chaff2 <- chaff %>%
 ########################### **Results** ##############################
 
 ########################### **Discussion** ###########################
+
+########################### **Data Saving** ###########################
+file <-  "Processed_data/chaff2.txt"
+write.table(chaff2, 
+            file, 
+            quote = FALSE,
+            row.names = FALSE)
+file <-  "Processed_data/chaffsummary.txt"
+write.table(chaffsummary, 
+            file, 
+            quote = FALSE,
+            row.names = FALSE)
