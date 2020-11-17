@@ -1,6 +1,5 @@
-########################### **Set Up** ########################### 
 ---
-title: "main"
+title: "Variation In Weight Between Chaffinch Sexes"
 author: "Ellie Kewin"
 date: "04/11/2020"
 output: 
@@ -23,7 +22,7 @@ sum_sq <- function(df, measure, group) {
   df %>% group_by({{ group }}) %>% 
     summarise(ss = sum(({{measure}} - mean({{measure}}))^2))
 }
-
+#function that summarises, the mean, n, standard deviation and standard error of the data
 data_summary <- function(df, measure, group)  {
   df %>% 
    group_by({{ group }}) %>% 
@@ -31,30 +30,30 @@ data_summary <- function(df, measure, group)  {
             n = length({{ measure }}),  sd = sd({{ measure }}), se = sd/sqrt(n))
   }
 ```
-########################### **Data Import** ###########################
+# Introduction
+
+# Methods
+```{r imports}
+#Data Import
+# the data is organised into two columns, one for each sex
 chaff <- read.delim("~/Documents/Uni/Data Science/Chaff/raw_data/chaff.txt") %>%
   janitor::clean_names()
 View(chaff)
+```
 
-########################## **Data Tidying** ###########################
+```{r tidy}
+#put the data in a tidy format
 chaff2 <- chaff %>% 
   pivot_longer(names_to = "sex", 
                values_to = "mass",
                cols = c(1,2))
-               
-########################## **Data Analysis** ###########################
+```    
+ 
+######################### **Data Analysis** ###########################
 sum_sq(chaff2, mass, sex)
 chaffsummary <- data_summary(chaff2, mass, sex)
     
-########################## **Introduction** ###########################
 
-########################## **Methods** ################################
-
-########################### **Results** ##############################
-
-########################### **Discussion** ###########################
-
-########################### **Data Saving** ###########################
 file <-  "Processed_data/chaff2.txt"
 write.table(chaff2, 
             file, 
