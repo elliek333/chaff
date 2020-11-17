@@ -48,12 +48,20 @@ chaff2 <- chaff %>%
                values_to = "mass",
                cols = c(1,2))
 ```    
- 
-######################### **Data Analysis** ###########################
+
+```{r summarise}
 sum_sq(chaff2, mass, sex)
 chaffsummary <- data_summary(chaff2, mass, sex)
-    
+```    
 
+# Results
+
+# Discussion
+
+# References
+
+# Appendices
+```{r saving}
 file <-  "Processed_data/chaff2.txt"
 write.table(chaff2, 
             file, 
@@ -64,3 +72,4 @@ write.table(chaffsummary,
             file, 
             quote = FALSE,
             row.names = FALSE)
+```
